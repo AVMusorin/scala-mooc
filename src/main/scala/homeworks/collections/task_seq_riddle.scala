@@ -19,20 +19,24 @@ object task_seq_riddle {
    * */
 
   def nextLine(currentLine: List[Int]): List[Int] = {
+    /**
+     * Returns reversed list
+     */
     @tailrec
     def recValuesAcc(element: Int, tail: List[Int], seq: List[Int], currentAcc: Int = 1): List[Int] = {
+      // added elements in the head of the list to avoid scanning full list in case of adding in tail
       tail match {
-        case x :: Nil if x == element => seq ++ List(currentAcc + 1, element)
-        case x :: Nil => seq ++ List(currentAcc, element) ++ List(1, x)
+        case x :: Nil if x == element => element :: currentAcc + 1 :: seq
+        case x :: Nil => x :: 1 :: element :: currentAcc :: seq
         case x :: xs if x == element => recValuesAcc(x, xs, seq, currentAcc + 1)
-        case x :: xs => recValuesAcc(x, xs, seq ++ List(currentAcc, element))
+        case x :: xs => recValuesAcc(x, xs, element :: currentAcc :: seq)
         case Nil => seq
       }
     }
     currentLine match {
       case Nil => List(1)
       case h :: Nil => List(1, h)
-      case h :: tail => recValuesAcc(h, tail, List.empty[Int])
+      case h :: tail => recValuesAcc(h, tail, List.empty[Int]).reverse
     }
   }
 
